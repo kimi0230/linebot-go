@@ -1,0 +1,41 @@
+version: '3'
+networks:
+    linebot-go-network:
+        driver: bridge
+services:
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: linebot-go
+    restart: always
+    ports: 
+      - '8080:8080'
+    environment:
+      - MONGODB_USERNAME=user
+      - MONGODB_PASSWORD=user_password
+      - MONGODB_DATABASE=linebot-go
+    depends_on:
+      - mongodb
+    networks:
+      - linebot-go-network
+  mongodb:
+    image: mongo:4.4
+    container_name: mongo4.4
+    restart: always
+    ports:
+      - 27017:27017
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=root
+      - MONGO_INITDB_ROOT_PASSWORD=root
+      - MONGO_INITDB_DATABASE=linebot-go
+      - MONGO_NON_ROOT_USERNAME=user
+      - MONGO_NON_ROOT_PASSWORD=user_password
+    volumes:
+      - ./mdb:/data/db
+      # The :ro at the end of the volume definition makes the file read-only inside the container, which is recommended for security purposes.
+      # The code in the docker-entrypoint-init.d folder is only executed if the database has never been initialized before.
+      - ./mdb/mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
+    command: mongod --bind_ip_all --auth
+    networks:
+      - linebot-go-network
