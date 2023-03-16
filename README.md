@@ -16,5 +16,16 @@ go get -u github.com/spf13/cobra@latest
 go get -u go.mongodb.org/mongo-driver/mongo
 ```
 
+## Run locally
+```sh
+docker-compose up --build
+
+# 重新執行且放到背景
+docker-compose start
+
+# 停止容器
+docker-compose stop
+```
+
 # Reference
 * [developers.line.biz](https://developers.line.biz/en/docs/)

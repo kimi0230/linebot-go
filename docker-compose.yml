@@ -1,0 +1,15 @@
+version: '3'
+networks:
+    linebot-go-network:
+        driver: bridge
+services:
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: linebot-go
+    restart: always
+    ports: 
+      - '8080:8080'
+    networks:
+      - linebot-go-network
