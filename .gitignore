@@ -1,3 +1,4 @@
 tmp
 mdb/*
 !.gitkeep
+!mongo-init.js
