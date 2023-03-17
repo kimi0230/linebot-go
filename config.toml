@@ -5,3 +5,7 @@
     port = "8080"
     read_timeout = "30s"
     write_timeout = "30s"
+
+[line]
+    channel_secret = "channel secret"
+    accsss_token = "channel access token"
