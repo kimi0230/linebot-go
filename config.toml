@@ -1,0 +1,7 @@
+[app]
+    name = "linebot-go"
+
+[http]
+    port = "8080"
+    read_timeout = "30s"
+    write_timeout = "30s"
