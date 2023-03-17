@@ -7,16 +7,24 @@ use below golang libs:
 * cobra: command line tools https://github.com/spf13/cobra
 * Go line sdk : https://github.com/line/line-bot-sdk-go
 
+## Ngrok
+Download
+* https://dashboard.ngrok.com/get-started/setup
+
+
+Connect your account
+`ngrok config add-authtoken <your auth>`
+
+Run
+
+`./ngrok http <port>`
 
 ```sh
-$ go get -u github.com/gin-gonic/gin
-go get -u github.com/line/line-bot-sdk-go/v7/linebot
-go get -u github.com/spf13/viper
-go get -u github.com/spf13/cobra@latest
-go get -u go.mongodb.org/mongo-driver/mongo
+./ngrok http 8080
 ```
 
 ## Run locally
+### Docker
 ```sh
 docker-compose up --build
 
@@ -25,6 +33,11 @@ docker-compose start
 
 # 停止容器
 docker-compose stop
+```
+
+### Command
+```
+go run main.go -c local.toml
 ```
 
 # Reference

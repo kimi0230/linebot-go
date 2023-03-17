@@ -2,3 +2,4 @@ tmp
 data/mdb/*
 !.gitkeep
 !mongo-init.js
+local.toml
