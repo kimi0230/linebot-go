@@ -3,11 +3,13 @@ package main
 import (
 	"flag"
 	"fmt"
+	"linebot-go/services/linesdk"
 	"log"
 	"net/http"
 	"os"
 
 	"github.com/gin-gonic/gin"
+	"github.com/line/line-bot-sdk-go/v7/linebot"
 	"github.com/spf13/viper"
 )
 
@@ -46,8 +48,45 @@ func main() {
 		})
 	})
 
-	fmt.Println(viper.GetDuration("http.read_timeout"))
-	fmt.Println(viper.GetDuration("http.write_timeout"))
+	r.POST("/callback", func(c *gin.Context) {
+		bot, err := linesdk.NewLineBot(viper.GetString("line.channel_secret"), viper.GetString("line.accsss_token"))
+		k := bot.Client.GetBotInfo()
+		fmt.Println(k)
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		events, err := bot.Client.ParseRequest(c.Request)
+		fmt.Println("events", events)
+		log.Println(err)
+		if err != nil {
+			log.Println(err)
+			if err == linebot.ErrInvalidSignature {
+				c.AbortWithStatus(400)
+			} else {
+				c.AbortWithStatus(500)
+			}
+			return
+		}
+
+		// Handle received events 處理每個收到的事件
+		for _, event := range events {
+			fmt.Println("event", event)
+			if event.Type == linebot.EventTypeMessage {
+				switch message := event.Message.(type) {
+				case *linebot.TextMessage:
+					// echo message
+					if _, err := bot.Client.ReplyMessage(event.ReplyToken, linebot.NewTextMessage(message.Text)).Do(); err != nil {
+						log.Print(err)
+					}
+				}
+			}
+		}
+		c.JSON(http.StatusOK, gin.H{
+			"message": "ok",
+		})
+	})
+
 	port := viper.GetString("http.port")
 	httpServer := &http.Server{
 		Addr:         ":" + port,
