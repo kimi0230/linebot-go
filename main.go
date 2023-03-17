@@ -55,10 +55,10 @@ func main() {
 		}
 
 		events, err := bot.Client.ParseRequest(c.Request)
-		fmt.Println("events", events)
-		log.Println(err)
+
 		if err != nil {
 			log.Println(err)
+			// Signature validation
 			if err == linebot.ErrInvalidSignature {
 				c.AbortWithStatus(http.StatusBadRequest)
 			} else {
@@ -74,7 +74,23 @@ func main() {
 				switch message := event.Message.(type) {
 				case *linebot.TextMessage:
 					// echo message
-					if _, err := bot.Client.ReplyMessage(event.ReplyToken, linebot.NewTextMessage(message.Text)).Do(); err != nil {
+					userID := event.Source.UserID
+					fmt.Printf("userID = %s", userID)
+
+					// get user profile
+					profile, err := bot.GetProfile(userID)
+					if err != nil {
+						log.Print(err)
+						c.AbortWithStatus(http.StatusInternalServerError)
+					} else {
+						displayName := profile.DisplayName
+						photoURL := profile.PictureURL
+						statusMessage := profile.StatusMessage
+						fmt.Printf("User: name=%s\t, photo=%s\t, status=%s\n", displayName, photoURL, statusMessage)
+					}
+
+					// Reply message
+					if _, err := bot.ReplyMessage(event.ReplyToken, message.Text); err != nil {
 						log.Print(err)
 						c.AbortWithStatus(http.StatusInternalServerError)
 					}

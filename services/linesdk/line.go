@@ -17,6 +17,21 @@ func (lb *LineBot) HandleMessage() {
 
 }
 
-func (lb *LineBot) ReplyMessage() {
+func (lb *LineBot) ReplyMessage(replyToken string, messages string) (*linebot.BasicResponse, error) {
+	basicResponse, err := lb.Client.ReplyMessage(replyToken, linebot.NewTextMessage(messages)).Do()
+	if err != nil {
+
+		return nil, err
+	}
+	return basicResponse, nil
+}
+
+// https://developers.line.biz/en/reference/messaging-api/#get-profile
+func (lb *LineBot) GetProfile(userID string) (*linebot.UserProfileResponse, error) {
+	profile, err := lb.Client.GetProfile(userID).Do()
+	if err != nil {
+		return nil, err
+	}
+	return profile, nil
 
 }
