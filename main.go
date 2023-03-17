@@ -50,8 +50,6 @@ func main() {
 
 	r.POST("/callback", func(c *gin.Context) {
 		bot, err := linesdk.NewLineBot(viper.GetString("line.channel_secret"), viper.GetString("line.accsss_token"))
-		k := bot.Client.GetBotInfo()
-		fmt.Println(k)
 		if err != nil {
 			log.Fatal(err)
 		}
@@ -62,14 +60,14 @@ func main() {
 		if err != nil {
 			log.Println(err)
 			if err == linebot.ErrInvalidSignature {
-				c.AbortWithStatus(400)
+				c.AbortWithStatus(http.StatusBadRequest)
 			} else {
-				c.AbortWithStatus(500)
+				c.AbortWithStatus(http.StatusInternalServerError)
 			}
 			return
 		}
 
-		// Handle received events 處理每個收到的事件
+		// Handle received events
 		for _, event := range events {
 			fmt.Println("event", event)
 			if event.Type == linebot.EventTypeMessage {
@@ -78,6 +76,7 @@ func main() {
 					// echo message
 					if _, err := bot.Client.ReplyMessage(event.ReplyToken, linebot.NewTextMessage(message.Text)).Do(); err != nil {
 						log.Print(err)
+						c.AbortWithStatus(http.StatusInternalServerError)
 					}
 				}
 			}

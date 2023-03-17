@@ -49,3 +49,4 @@ go run main.go -c local.toml
 * [MONGO_INITDB_DATABASE and directory docker-entrypoint-initdb.d not running](https://github.com/docker-library/mongo/issues/429)
 * [Docker Compose MongoDB docker-entrypoint-initdb.d is not working](https://stackoverflow.com/questions/60522471/docker-compose-mongodb-docker-entrypoint-initdb-d-is-not-working)
 * [config: spf13/viper](https://github.com/spf13/viper)
+* [cosmtrek/air](https://github.com/cosmtrek/air)
