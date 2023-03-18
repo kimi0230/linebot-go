@@ -1,6 +1,7 @@
 # linebot-go
+Sample LineBot. receive message from line webhook, save the user info and message in MongoDB.
 
-use below golang libs:
+Use below golang libs:
 * HTTP framework: https://github.com/gin-gonic/gin
 * Config: https://github.com/spf13/viper
 * Mongo driver: https://github.com/mongodb/mongo-go-driver 
@@ -8,9 +9,7 @@ use below golang libs:
 * Go line sdk : https://github.com/line/line-bot-sdk-go
 
 ## Ngrok
-Download
-* https://dashboard.ngrok.com/get-started/setup
-
+Download : https://dashboard.ngrok.com/get-started/setup
 
 Connect your account
 `ngrok config add-authtoken <your auth>`
@@ -36,8 +35,28 @@ docker-compose stop
 ```
 
 ### Command
+```sh
+# command 
+# go run main.go --config <your config> http --port <your port>
+go run main.go --config config.toml http --port 8080
+
+# air -c  <your air config> --port <your port>
+# will run local.toml
+air -c air.toml http
+
+# build/
+./build/linebot-go.mac.x64 --config local.toml http --port 8080
 ```
-go run main.go -c local.toml
+
+### Test Server
+```sh
+curl 127.0.0.1:8080/ping
+```
+
+## Line Webhook settings
+```sh
+# <ngrok url>/api/v1/callback
+https://835d-61-228-16-110.jp.ngrok.io/api/v1/callback
 ```
 
 # Reference
