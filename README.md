@@ -1,22 +1,29 @@
 # linebot-go
+Sample LineBot. receive message from line webhook, save the user info and message in MongoDB.
 
-use below golang libs:
+Use below golang libs:
 * HTTP framework: https://github.com/gin-gonic/gin
 * Config: https://github.com/spf13/viper
 * Mongo driver: https://github.com/mongodb/mongo-go-driver 
 * cobra: command line tools https://github.com/spf13/cobra
 * Go line sdk : https://github.com/line/line-bot-sdk-go
 
+## Ngrok
+Download : https://dashboard.ngrok.com/get-started/setup
+
+Connect your account
+`ngrok config add-authtoken <your auth>`
+
+Run
+
+`./ngrok http <port>`
 
 ```sh
-$ go get -u github.com/gin-gonic/gin
-go get -u github.com/line/line-bot-sdk-go/v7/linebot
-go get -u github.com/spf13/viper
-go get -u github.com/spf13/cobra@latest
-go get -u go.mongodb.org/mongo-driver/mongo
+./ngrok http 8080
 ```
 
 ## Run locally
+### Docker
 ```sh
 docker-compose up --build
 
@@ -27,6 +34,31 @@ docker-compose start
 docker-compose stop
 ```
 
+### Command
+```sh
+# command 
+# go run main.go --config <your config> http --port <your port>
+go run main.go --config config.toml http --port 8080
+
+# air -c  <your air config> --port <your port>
+# will run local.toml
+air -c air.toml http
+
+# build/
+./build/linebot-go.mac.x64 --config local.toml http --port 8080
+```
+
+### Test Server
+```sh
+curl 127.0.0.1:8080/ping
+```
+
+## Line Webhook settings
+```sh
+# <ngrok url>/api/v1/callback
+https://835d-61-228-16-110.jp.ngrok.io/api/v1/callback
+```
+
 # Reference
 * [developers.line.biz](https://developers.line.biz/en/docs/)
 * [使用 Docker 構築不同 MongoDB 架構 (二) - Standalone](https://ithelp.ithome.com.tw/articles/10224871)
@@ -35,3 +67,5 @@ docker-compose stop
 * [mongodb : db.getSiblingDB()](https://www.mongodb.com/docs/manual/reference/method/db.getSiblingDB/)
 * [MONGO_INITDB_DATABASE and directory docker-entrypoint-initdb.d not running](https://github.com/docker-library/mongo/issues/429)
 * [Docker Compose MongoDB docker-entrypoint-initdb.d is not working](https://stackoverflow.com/questions/60522471/docker-compose-mongodb-docker-entrypoint-initdb-d-is-not-working)
+* [config: spf13/viper](https://github.com/spf13/viper)
+* [cosmtrek/air](https://github.com/cosmtrek/air)
