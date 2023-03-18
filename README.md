@@ -76,3 +76,4 @@ https://835d-61-228-16-110.jp.ngrok.io/api/v1/callback
 * [Docker Compose MongoDB docker-entrypoint-initdb.d is not working](https://stackoverflow.com/questions/60522471/docker-compose-mongodb-docker-entrypoint-initdb-d-is-not-working)
 * [config: spf13/viper](https://github.com/spf13/viper)
 * [cosmtrek/air](https://github.com/cosmtrek/air)
+* [mongodb Connection Guide](https://www.mongodb.com/docs/drivers/go/current/fundamentals/connection/)

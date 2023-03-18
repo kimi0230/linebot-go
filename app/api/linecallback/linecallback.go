@@ -1,14 +1,19 @@
 package linecallback
 
 import (
+	"context"
 	"fmt"
+	models "linebot-go/app/models/user"
 	"linebot-go/services/linesdk"
+	"linebot-go/services/mongodb"
 	"log"
 	"net/http"
+	"time"
 
 	"github.com/gin-gonic/gin"
 	"github.com/line/line-bot-sdk-go/v7/linebot"
 	"github.com/spf13/viper"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 func Callback(c *gin.Context) {
@@ -50,6 +55,24 @@ func Callback(c *gin.Context) {
 					photoURL := profile.PictureURL
 					statusMessage := profile.StatusMessage
 					fmt.Printf("User: name=%s\t, photo=%s\t, status=%s\n", displayName, photoURL, statusMessage)
+
+					// TODO: Create or Update user info in mongodb
+					mgClient, _ := mongodb.NewMongoClient()
+					ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+					defer cancel()
+					mgClient.Ping(ctx, nil)
+
+					userDAO := models.NewUserDAO(mgClient)
+
+					userDTO := models.UserDTO{
+						ID:            primitive.NewObjectID(),
+						UserID:        userID,
+						DisplayName:   profile.DisplayName,
+						PictureURL:    profile.PictureURL,
+						StatusMessage: profile.StatusMessage,
+						Language:      profile.Language,
+					}
+					userDAO.CreateUser(&userDTO)
 				}
 
 				// Reply message
@@ -57,8 +80,8 @@ func Callback(c *gin.Context) {
 					log.Print(err)
 					c.AbortWithStatus(http.StatusInternalServerError)
 				}
-				// TODO: Write to mongodb
 
+				// TODO: Create message info in mongodb
 			}
 		}
 	}

@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"time"
 
+	"github.com/spf13/viper"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
@@ -31,4 +32,14 @@ func ConnectMongoDB(ip, port, username, password, poolsize, database string) (*m
 	}
 
 	return client, nil
+}
+
+func NewMongoClient() (*mongo.Client, error) {
+	ip := viper.GetString("mongo.ip")
+	port := viper.GetString("mongo.port")
+	username := viper.GetString("mongo.username")
+	password := viper.GetString("mongo.password")
+	poolsize := viper.GetString("mongo.poolsize")
+	database := viper.GetString("mongo.database")
+	return ConnectMongoDB(ip, port, username, password, poolsize, database)
 }

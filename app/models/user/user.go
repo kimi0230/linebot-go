@@ -1,3 +1,5 @@
+package models
+
 type UserModel struct {
 	dao *UserDAO
 }

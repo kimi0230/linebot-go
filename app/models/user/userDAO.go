@@ -3,16 +3,27 @@ package models
 import (
 	"context"
 
+	"github.com/spf13/viper"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 	"gopkg.in/mgo.v2/bson"
+)
+
+var (
+	COLLECTION_NAME = "users"
 )
 
 type UserDAO struct {
 	collection *mongo.Collection
 }
 
-func NewUserDAO(client *mongo.Client, dbName, collName string) *UserDAO {
+func NewUserDAO(client *mongo.Client) *UserDAO {
+	return &UserDAO{
+		collection: client.Database(viper.GetString("mongo.database")).Collection(COLLECTION_NAME),
+	}
+}
+
+func NewUserDAOwithName(client *mongo.Client, dbName, collName string) *UserDAO {
 	return &UserDAO{
 		collection: client.Database(dbName).Collection(collName),
 	}
@@ -43,9 +54,11 @@ func (dao *UserDAO) GetUserByID(id string) (*UserDTO, error) {
 func (dao *UserDAO) UpdateUser(user *UserDTO) (*mongo.UpdateResult, error) {
 	filter := bson.M{"_id": user.ID}
 	update := bson.M{"$set": bson.M{
-		"name":     user.Name,
-		"email":    user.Email,
-		"password": user.Password,
+		"userId":        user.UserID,
+		"displayName":   user.DisplayName,
+		"pictureUrl":    user.PictureURL,
+		"statusMessage": user.PictureURL,
+		"language":      user.Language,
 	}}
 	result, err := dao.collection.UpdateOne(context.Background(), filter, update)
 	if err != nil {
