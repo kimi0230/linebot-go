@@ -9,6 +9,7 @@ RUN go build -o APPSERVICE
 FROM alpine
 WORKDIR /app
 COPY --from=build-env /go/src/linebot-go/api/APPSERVICE /app/
+COPY --from=build-env /go/src/linebot-go/api/config.toml /app/
 # COPY --from=build-env /go/src/linebot-go/api/.env /app/
 # RUN ["mkdir","logs"]
 RUN ["chmod", "+x", "APPSERVICE"]

@@ -48,7 +48,7 @@ air -c air.toml http
 ./build/linebot-go.mac.x64 --config local.toml http --port 8080
 ```
 
-### Test Server
+### Test Http Server
 ```sh
 curl 127.0.0.1:8080/ping
 ```
@@ -58,6 +58,13 @@ curl 127.0.0.1:8080/ping
 # <ngrok url>/api/v1/callback
 https://835d-61-228-16-110.jp.ngrok.io/api/v1/callback
 ```
+
+## Connect Mongodb
+* Root Username = root
+* Root Password = root
+* User Username = user
+* User Password = user_password
+* Database = linebot-go
 
 # Reference
 * [developers.line.biz](https://developers.line.biz/en/docs/)

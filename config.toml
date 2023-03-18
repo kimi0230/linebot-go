@@ -1,5 +1,5 @@
 [app]
-    name = "linebot-go"
+    name = "linebot-go-local"
 
 [http]
     port = "8080"
@@ -7,5 +7,11 @@
     write_timeout = "30s"
 
 [line]
-    channel_secret = "channel secret"
-    accsss_token = "channel access token"
+    channel_secret = "67f036d7958d03be37ffb277a3b28b92"
+    accsss_token = "nPCIDa6RvCuNBv6pW7yB+VcRvJkpEcUl3mdvLNguBbSFDQTvyK4mU5E1ZUqI4W8QqtyEtZHbNnlP/Je6JowvUN+/0jOInUHCUYXFMJL2n3qlU7ShMzmwwI/jHWMC2XBiDmS15KxVX8/q6F5wG2ylgQdB04t89/1O/w1cDnyilFU="
+
+[mongo]
+    ip="127.0.0.1"
+    port="27017"
+    username="user"
+    password="user_password"

@@ -3,22 +3,22 @@ networks:
     linebot-go-network:
         driver: bridge
 services:
-  api:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    container_name: linebot-go
-    restart: always
-    ports: 
-      - '8080:8080'
-    environment:
-      - MONGODB_USERNAME=user
-      - MONGODB_PASSWORD=user_password
-      - MONGODB_DATABASE=linebot-go
-    depends_on:
-      - mongodb
-    networks:
-      - linebot-go-network
+  # api:
+  #   build:
+  #     context: .
+  #     dockerfile: Dockerfile
+  #   container_name: linebot-go
+  #   restart: always
+  #   ports: 
+  #     - '8080:8080'
+  #   environment:
+  #     - MONGODB_USERNAME=user
+  #     - MONGODB_PASSWORD=user_password
+  #     - MONGODB_DATABASE=linebot-go
+  #   depends_on:
+  #     - mongodb
+  #   networks:
+  #     - linebot-go-network
   mongodb:
     image: mongo:4.4
     container_name: mongo4.4
