@@ -57,6 +57,8 @@ func Callback(c *gin.Context) {
 					log.Print(err)
 					c.AbortWithStatus(http.StatusInternalServerError)
 				}
+				// TODO: Write to mongodb
+
 			}
 		}
 	}

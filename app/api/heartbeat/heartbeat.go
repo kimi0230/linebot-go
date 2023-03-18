@@ -9,7 +9,7 @@ import (
 )
 
 func Ping(c *gin.Context) {
-	if _, err := mongodb.ConnectMongoDB(viper.GetString("mongo.ip"), viper.GetString("mongo.port"), viper.GetString("mongo.username"), viper.GetString("mongo.password")); err != nil {
+	if _, err := mongodb.ConnectMongoDB(viper.GetString("mongo.ip"), viper.GetString("mongo.port"), viper.GetString("mongo.username"), viper.GetString("mongo.password"), viper.GetString("mongo.poolsize"), viper.GetString("mongo.database")); err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"message": err,
 		})

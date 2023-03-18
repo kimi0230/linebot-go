@@ -9,12 +9,14 @@ import (
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
-func ConnectMongoDB(ip, port, username, password string) (*mongo.Client, error) {
-	uri := fmt.Sprintf("mongodb://%s:%s@%s:%s/linebot-go", username, password, ip, port)
-	// fmt.Println("URL", uri)
-	clientOptions := options.Client().ApplyURI(uri)
+var (
+	POOLSIZE = 10
+)
 
-	// 創建一個新的 MongoDB 用戶端
+func ConnectMongoDB(ip, port, username, password, poolsize, database string) (*mongo.Client, error) {
+	uri := fmt.Sprintf("mongodb://%s:%s@%s:%s/%s", username, password, ip, port, database)
+	clientOptions := options.Client().ApplyURI(uri).SetMaxPoolSize(uint64(POOLSIZE))
+
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 

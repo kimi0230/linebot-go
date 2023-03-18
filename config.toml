@@ -7,8 +7,8 @@
     write_timeout = "30s"
 
 [line]
-    channel_secret = "67f036d7958d03be37ffb277a3b28b92"
-    accsss_token = "nPCIDa6RvCuNBv6pW7yB+VcRvJkpEcUl3mdvLNguBbSFDQTvyK4mU5E1ZUqI4W8QqtyEtZHbNnlP/Je6JowvUN+/0jOInUHCUYXFMJL2n3qlU7ShMzmwwI/jHWMC2XBiDmS15KxVX8/q6F5wG2ylgQdB04t89/1O/w1cDnyilFU="
+    channel_secret = ""
+    accsss_token = ""
 
 [mongo]
     ip="127.0.0.1"
