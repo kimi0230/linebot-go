@@ -6,6 +6,7 @@ import (
 	"github.com/spf13/viper"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
+	"go.mongodb.org/mongo-driver/mongo/options"
 	"gopkg.in/mgo.v2/bson"
 )
 
@@ -29,7 +30,7 @@ func NewUserDAOwithName(client *mongo.Client, dbName, collName string) *UserDAO 
 	}
 }
 
-func (dao *UserDAO) CreateUser(user *UserDTO) (*mongo.InsertOneResult, error) {
+func (dao *UserDAO) Create(user *UserDTO) (*mongo.InsertOneResult, error) {
 	result, err := dao.collection.InsertOne(context.Background(), user)
 	if err != nil {
 		return nil, err
@@ -37,7 +38,7 @@ func (dao *UserDAO) CreateUser(user *UserDTO) (*mongo.InsertOneResult, error) {
 	return result, nil
 }
 
-func (dao *UserDAO) GetUserByID(id string) (*UserDTO, error) {
+func (dao *UserDAO) GetByID(id string) (*UserDTO, error) {
 	objID, err := primitive.ObjectIDFromHex(id)
 	if err != nil {
 		return nil, err
@@ -51,7 +52,7 @@ func (dao *UserDAO) GetUserByID(id string) (*UserDTO, error) {
 	return &user, nil
 }
 
-func (dao *UserDAO) UpdateUser(user *UserDTO) (*mongo.UpdateResult, error) {
+func (dao *UserDAO) Update(user *UserDTO) (*mongo.UpdateResult, error) {
 	filter := bson.M{"_id": user.ID}
 	update := bson.M{"$set": bson.M{
 		"userId":        user.UserID,
@@ -67,7 +68,26 @@ func (dao *UserDAO) UpdateUser(user *UserDTO) (*mongo.UpdateResult, error) {
 	return result, nil
 }
 
-func (dao *UserDAO) DeleteUser(id string) (*mongo.DeleteResult, error) {
+func (dao *UserDAO) CreateOrUpdate(user *UserDTO) (*mongo.UpdateResult, error) {
+	filter := bson.M{"userId": user.UserID}
+
+	update := bson.M{
+		"$set": user,
+	}
+
+	// https://www.mongodb.com/docs/drivers/go/current/fundamentals/crud/write-operations/upsert/
+	// SetUpsert : Applications use insert and update operations to store and modify data. Sometimes, you need to choose between an insert and an update operation depending on whether the document exist
+	options := options.Update().SetUpsert(true)
+
+	result, err := dao.collection.UpdateOne(context.Background(), filter, update, options)
+	if err != nil {
+		return nil, err
+	}
+
+	return result, nil
+}
+
+func (dao *UserDAO) Delete(id string) (*mongo.DeleteResult, error) {
 	objID, err := primitive.ObjectIDFromHex(id)
 	if err != nil {
 		return nil, err

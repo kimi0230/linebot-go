@@ -13,7 +13,6 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/line/line-bot-sdk-go/v7/linebot"
 	"github.com/spf13/viper"
-	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 func Callback(c *gin.Context) {
@@ -65,14 +64,14 @@ func Callback(c *gin.Context) {
 					userDAO := models.NewUserDAO(mgClient)
 
 					userDTO := models.UserDTO{
-						ID:            primitive.NewObjectID(),
+						// ID:            primitive.NewObjectID(),
 						UserID:        userID,
 						DisplayName:   profile.DisplayName,
 						PictureURL:    profile.PictureURL,
 						StatusMessage: profile.StatusMessage,
 						Language:      profile.Language,
 					}
-					userDAO.CreateUser(&userDTO)
+					userDAO.CreateOrUpdate(&userDTO)
 				}
 
 				// Reply message

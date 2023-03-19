@@ -11,7 +11,7 @@ func NewUserModel(dao *UserDAO) *UserModel {
 }
 
 func (m *UserModel) CreateUser(user *UserDTO) error {
-	_, err := m.dao.CreateUser(user)
+	_, err := m.dao.Create(user)
 	if err != nil {
 		return err
 	}
@@ -19,7 +19,7 @@ func (m *UserModel) CreateUser(user *UserDTO) error {
 }
 
 func (m *UserModel) GetUserByID(id string) (*UserDTO, error) {
-	user, err := m.dao.GetUserByID(id)
+	user, err := m.dao.GetByID(id)
 	if err != nil {
 		return nil, err
 	}
@@ -27,7 +27,7 @@ func (m *UserModel) GetUserByID(id string) (*UserDTO, error) {
 }
 
 func (m *UserModel) UpdateUser(user *UserDTO) error {
-	_, err := m.dao.UpdateUser(user)
+	_, err := m.dao.Update(user)
 	if err != nil {
 		return err
 	}
@@ -35,7 +35,7 @@ func (m *UserModel) UpdateUser(user *UserDTO) error {
 }
 
 func (m *UserModel) DeleteUser(id string) error {
-	_, err := m.dao.DeleteUser(id)
+	_, err := m.dao.Delete(id)
 	if err != nil {
 		return err
 	}
