@@ -71,7 +71,7 @@ func Callback(c *gin.Context) {
 						StatusMessage: profile.StatusMessage,
 						Language:      profile.Language,
 					}
-					userDAO.CreateOrUpdate(&userDTO)
+					userDAO.CreateOrUpdateByUserID(&userDTO)
 				}
 
 				// Reply message

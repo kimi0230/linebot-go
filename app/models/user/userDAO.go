@@ -2,6 +2,7 @@ package models
 
 import (
 	"context"
+	"time"
 
 	"github.com/spf13/viper"
 	"go.mongodb.org/mongo-driver/bson/primitive"
@@ -31,6 +32,8 @@ func NewUserDAOwithName(client *mongo.Client, dbName, collName string) *UserDAO 
 }
 
 func (dao *UserDAO) Create(user *UserDTO) (*mongo.InsertOneResult, error) {
+	user.CreatedAt = time.Now()
+	user.UpdatedAt = time.Now()
 	result, err := dao.collection.InsertOne(context.Background(), user)
 	if err != nil {
 		return nil, err
@@ -54,12 +57,14 @@ func (dao *UserDAO) GetByID(id string) (*UserDTO, error) {
 
 func (dao *UserDAO) Update(user *UserDTO) (*mongo.UpdateResult, error) {
 	filter := bson.M{"_id": user.ID}
+	// filter := bson.M{"userId": user.UserID}
 	update := bson.M{"$set": bson.M{
 		"userId":        user.UserID,
 		"displayName":   user.DisplayName,
 		"pictureUrl":    user.PictureURL,
 		"statusMessage": user.PictureURL,
 		"language":      user.Language,
+		"updated_at":    time.Now(),
 	}}
 	result, err := dao.collection.UpdateOne(context.Background(), filter, update)
 	if err != nil {
@@ -68,11 +73,13 @@ func (dao *UserDAO) Update(user *UserDTO) (*mongo.UpdateResult, error) {
 	return result, nil
 }
 
-func (dao *UserDAO) CreateOrUpdate(user *UserDTO) (*mongo.UpdateResult, error) {
+func (dao *UserDAO) CreateOrUpdateByUserID(user *UserDTO) (*mongo.UpdateResult, error) {
 	filter := bson.M{"userId": user.UserID}
 
 	update := bson.M{
-		"$set": user,
+		"$set":         user,
+		"$setOnInsert": bson.M{"created_at": time.Now()},
+		"$currentDate": bson.M{"updated_at": true},
 	}
 
 	// https://www.mongodb.com/docs/drivers/go/current/fundamentals/crud/write-operations/upsert/

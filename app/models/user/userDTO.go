@@ -1,6 +1,10 @@
 package models
 
-import "go.mongodb.org/mongo-driver/bson/primitive"
+import (
+	"time"
+
+	"go.mongodb.org/mongo-driver/bson/primitive"
+)
 
 type UserDTO struct {
 	ID            primitive.ObjectID `bson:"_id,omitempty"`
@@ -9,4 +13,6 @@ type UserDTO struct {
 	PictureURL    string             `bson:"pictureUrl,omitempty"`
 	StatusMessage string             `bson:"statusMessage,omitempty"`
 	Language      string             `bson:"language,omitempty"`
+	CreatedAt     time.Time          `bson:"created_at,omitempty"`
+	UpdatedAt     time.Time          `bson:"updated_at,omitempty"`
 }
