@@ -1,4 +1,4 @@
-package models
+package usermodel
 
 import (
 	"linebot-go/services/mongodb"

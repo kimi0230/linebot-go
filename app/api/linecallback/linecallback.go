@@ -1,14 +1,13 @@
 package linecallback
 
 import (
-	"context"
 	"fmt"
-	models "linebot-go/app/models/user"
+	"linebot-go/app/models/messagemodel"
+	"linebot-go/app/models/usermodel"
 	"linebot-go/services/linesdk"
 	"linebot-go/services/mongodb"
 	"log"
 	"net/http"
-	"time"
 
 	"github.com/gin-gonic/gin"
 	"github.com/line/line-bot-sdk-go/v7/linebot"
@@ -36,15 +35,21 @@ func Callback(c *gin.Context) {
 
 	// Handle received events
 	for _, event := range events {
-		fmt.Println("event", event)
+		fmt.Printf("event = %+v \n", event)
 		if event.Type == linebot.EventTypeMessage {
 			switch message := event.Message.(type) {
 			case *linebot.TextMessage:
 				// echo message
 				userID := event.Source.UserID
-				fmt.Printf("userID = %s", userID)
 
-				// get user profile
+				// Create mongo client
+				mgClient, err := mongodb.NewMongoClient()
+				if err != nil {
+					log.Print(err)
+					c.AbortWithStatus(http.StatusInternalServerError)
+				}
+
+				// Get user profile and create or update
 				profile, err := bot.GetProfile(userID)
 				if err != nil {
 					log.Print(err)
@@ -55,15 +60,9 @@ func Callback(c *gin.Context) {
 					statusMessage := profile.StatusMessage
 					fmt.Printf("User: name=%s\t, photo=%s\t, status=%s\n", displayName, photoURL, statusMessage)
 
-					// TODO: Create or Update user info in mongodb
-					mgClient, _ := mongodb.NewMongoClient()
-					ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
-					defer cancel()
-					mgClient.Ping(ctx, nil)
-
-					userDAO := models.NewUserDAO(mgClient)
-
-					userDTO := models.UserDTO{
+					// Create or Update user info in mongodb
+					userDAO := usermodel.NewUserDAO(mgClient)
+					userDTO := usermodel.UserDTO{
 						// ID:            primitive.NewObjectID(),
 						UserID:        userID,
 						DisplayName:   profile.DisplayName,
@@ -74,13 +73,22 @@ func Callback(c *gin.Context) {
 					userDAO.CreateOrUpdateByUserID(&userDTO)
 				}
 
+				// Create message info in mongodb
+				messageDAO := messagemodel.NewMessageDAO(mgClient)
+				messageDTO := messagemodel.MessageDTO{
+					Type:        string(event.Type),
+					UserID:      userID,
+					MessageID:   message.ID,
+					MessageType: string(message.Type()),
+					MessageText: message.Text,
+				}
+				messageDAO.Create(&messageDTO)
+
 				// Reply message
 				if _, err := bot.ReplyMessage(event.ReplyToken, message.Text); err != nil {
 					log.Print(err)
 					c.AbortWithStatus(http.StatusInternalServerError)
 				}
-
-				// TODO: Create message info in mongodb
 			}
 		}
 	}
