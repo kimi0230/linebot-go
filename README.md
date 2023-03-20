@@ -71,27 +71,27 @@ curl --location --request GET 'http://127.0.0.1:8080/api/v1/users?limit=10&keywo
 ```json
 [
     {
-        "ID": "6417e6870fbeeaf39048053f",
-        "UserID": "xxxxx",
-        "DisplayName": "KK",
-        "PictureURL": "1",
-        "StatusMessage": "status message",
-        "Language": "en",
-        "CreatedAt": "2023-03-17T04:52:23.901Z",
-        "UpdatedAt": "2023-03-17T04:52:23.901Z"
+        "_id": "6417e76a71b3ed9dec533ca6",
+        "user_id": "5566",
+        "display_name": "KK",
+        "picture_url": "123456",
+        "status_message": "status message",
+        "language": "en",
+        "created_at": "2023-03-20T04:56:10.567Z",
+        "updated_at": "2023-03-20T04:56:10.567Z"
     }
     ...
 ]
 ```
 
-| Parameter     | type | Description                   |
-|---------------|------|-------------------------------|
-| ID            |      |                               |
-| UserID        |      | user id from LINE             |
-| DisplayName   |      | user name from LINE           |
-| PictureURL    |      | user picture from LINE        |
-| StatusMessage |      | user status message from LINE |
-| Language      |      | user language from LINE       |
+| Parameter      | type | Description                   |
+|----------------|------|-------------------------------|
+| _id            |      |                               |
+| user_id        |      | user id from LINE             |
+| display_name   |      | user name from LINE           |
+| picture_url    |      | user picture from LINE        |
+| status_message |      | user status message from LINE |
+| language       |      | user language from LINE       |
 
 #### HTTP Response Headers
 | Header        | Description                   |

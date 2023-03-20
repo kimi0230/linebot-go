@@ -2,17 +2,27 @@ package messagemodel
 
 import (
 	"context"
+	"strings"
 	"time"
 
 	"github.com/spf13/viper"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
+	"go.mongodb.org/mongo-driver/mongo/options"
 	"gopkg.in/mgo.v2/bson"
 )
 
 var (
 	COLLECTION_NAME = "messages"
 )
+
+type PageQueryArgs struct {
+	Keyword string `json:"keyword,omitempty" form:"keyword,omitempty" binding:"-"`
+	Limit   int    `json:"limit,default=100" form:"limit,default=100" binding:"required,number"`
+	Order   string `json:"order,default=desc" form:"order,default=desc" binding:"oneof=desc asc"`
+	By      string `json:"by,default=updated_at" form:"by,default=updated_at" binding:"-"`
+	Page    int    `json:"page,default=1" form:"page,default=1" binding:"number"`
+}
 
 type MessageDAO struct {
 	collection *mongo.Collection
@@ -54,6 +64,32 @@ func (dao *MessageDAO) GetByID(id string) (*MessageDTO, error) {
 	return &user, nil
 }
 
+func (dao *MessageDAO) GetByQuery(filter interface{}, limit int64, skip int64, order string, by string) (*[]MessageDTO, error) {
+	var users []MessageDTO
+	ctx := context.Background()
+	opts := options.Find().SetSkip(skip).SetLimit(limit)
+	// Handle Order
+	// https://www.mongodb.com/docs/drivers/go/current/fundamentals/crud/read-operations/sort/
+	order = strings.ToLower(order)
+	if order == "desc" {
+		opts = opts.SetSort(bson.M{by: -1})
+	} else {
+		opts = opts.SetSort(bson.M{by: 1})
+	}
+
+	cur, err := dao.collection.Find(ctx, filter, opts)
+	if err != nil {
+		return nil, err
+	}
+	defer cur.Close(ctx)
+
+	if err = cur.All(ctx, &users); err != nil {
+		panic(err)
+	}
+
+	return &users, nil
+}
+
 func (dao *MessageDAO) Update(message *MessageDTO) (*mongo.UpdateResult, error) {
 	filter := bson.M{"_id": message.ID}
 	update := bson.M{"$set": bson.M{}}
@@ -75,4 +111,14 @@ func (dao *MessageDAO) Delete(id string) (*mongo.DeleteResult, error) {
 		return nil, err
 	}
 	return result, nil
+}
+
+// https://www.mongodb.com/docs/drivers/go/current/fundamentals/crud/read-operations/count/
+func (dao *MessageDAO) CountDocuments(filter interface{}) (int64, error) {
+	ctx := context.Background()
+	count, err := dao.collection.CountDocuments(ctx, filter)
+	if err != nil {
+		return 0, err
+	}
+	return count, nil
 }

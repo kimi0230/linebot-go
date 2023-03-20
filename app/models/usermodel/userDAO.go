@@ -18,7 +18,7 @@ var (
 
 type PageQueryArgs struct {
 	Keyword string `json:"keyword,omitempty" form:"keyword,omitempty" binding:"-"`
-	Limit   int    `json:"limit,default=100" form:"limit,default=10" binding:"required,number"`
+	Limit   int    `json:"limit,default=100" form:"limit,default=100" binding:"required,number"`
 	Order   string `json:"order,default=desc" form:"order,default=desc" binding:"oneof=desc asc"`
 	By      string `json:"by,default=updated_at" form:"by,default=updated_at" binding:"-"`
 	Page    int    `json:"page,default=1" form:"page,default=1" binding:"number"`
