@@ -55,7 +55,7 @@ curl 127.0.0.1:8080/ping
 `GET {{URL}}/api/v1/users?limit=10&keyword=KK&order=desc&by=updated_at&page=1`
 
 ```shell
-curl --location --request GET 'http://127.0.0.1:8080/api/v1/users?limit=10&keyword=KK&order=desc&by=updated_at&page=1''
+curl --location --request GET 'http://127.0.0.1:8080/api/v1/users?limit=10&keyword=KK&order=desc&by=updated_at&page=1'
 ```
 
 | Parameter | type   | Description                              | default |
@@ -72,10 +72,10 @@ curl --location --request GET 'http://127.0.0.1:8080/api/v1/users?limit=10&keywo
 [
     {
         "_id": "6417e76a71b3ed9dec533ca6",
-        "user_id": "5566",
-        "display_name": "KK",
-        "picture_url": "123456",
-        "status_message": "status message",
+        "userId": "5566",
+        "displayName": "KK",
+        "pictureUrl": "123456",
+        "statusMessage": "status message",
         "language": "en",
         "created_at": "2023-03-20T04:56:10.567Z",
         "updated_at": "2023-03-20T04:56:10.567Z"
@@ -84,14 +84,69 @@ curl --location --request GET 'http://127.0.0.1:8080/api/v1/users?limit=10&keywo
 ]
 ```
 
-| Parameter      | type | Description                   |
-|----------------|------|-------------------------------|
-| _id            |      |                               |
-| user_id        |      | user id from LINE             |
-| display_name   |      | user name from LINE           |
-| picture_url    |      | user picture from LINE        |
-| status_message |      | user status message from LINE |
-| language       |      | user language from LINE       |
+| Parameter     | type   | Description                   |
+|---------------|--------|-------------------------------|
+| _id           | string |                               |
+| userId        | string | user id from LINE             |
+| displayName   | string | user name from LINE           |
+| pictureUrl    | string | user picture from LINE        |
+| statusMessage | string | user status message from LINE |
+| language      | string | user language from LINE       |
+
+#### HTTP Response Headers
+| Header        | Description                   |
+|---------------|-------------------------------|
+| X-Page        | The index of the current page |
+| X-Per-Page    | The number of items per page  |
+| x-total       | The total number of items     |
+| x-total-pages | The total number of pages     |
+
+### 2. Get Message List
+#### HTTP Request
+`GET {{URL}}/api/v1/messages?limit=10&order=desc&by=updated_at&page=1&user_id=5566`
+
+```shell
+curl --location --request GET 'http://127.0.0.1:8080/api/v1/messages?limit=10&order=desc&by=updated_at&page=1&user_id=5566'
+```
+
+| Parameter | type   | Description                              | default |
+|-----------|--------|------------------------------------------|---------|
+| user_id   | string | (optional) LINE User id                  |         |
+| limit     | int    | (optional) The number of items per page  | 100     |
+| page      | int    | (optional) The index of the current page | 1       |
+| order     | string | (optional) desc / asc                    | desc    |
+| by        | string | (optional) order field                   | id      |
+| keyword   | string | (optional) search displayName            |         |
+
+#### HTTP Response
+
+```json
+[
+    {
+        "_id": "64180e9ed08678d19571a8a7",
+        "type": "message",
+        "userId": "5566",
+        "replyToken": "123456789",
+        "messageId": "message id",
+        "messageText": "Hello World, Kimi",
+        "timestamp": "2023-03-20T07:43:26.445Z",
+        "created_at": "2023-03-20T07:43:26.533Z",
+        "updated_at": "2023-03-20T07:43:26.533Z"
+    }
+    ...
+]
+```
+
+| Parameter   | type      | Description            |
+|-------------|-----------|------------------------|
+| _id         | string    |                        |
+| type        | string    | LINE event type        |
+| userId      | string    | user id from LINE      |
+| replyToken  | string    | replyToken from LINE   |
+| messageId   | string    | message id from LINE   |
+| messageText | string    | message text from LINE |
+| timestamp   | time.time | timestamp from LINE    |
+
 
 #### HTTP Response Headers
 | Header        | Description                   |

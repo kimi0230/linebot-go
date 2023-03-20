@@ -35,7 +35,7 @@ func Callback(c *gin.Context) {
 
 	// Handle received events
 	for _, event := range events {
-		fmt.Printf("event = %+v \n", event)
+		fmt.Printf("event = %+v \n", event.Message)
 		if event.Type == linebot.EventTypeMessage {
 			switch message := event.Message.(type) {
 			case *linebot.TextMessage:
@@ -78,10 +78,12 @@ func Callback(c *gin.Context) {
 				messageDTO := messagemodel.MessageDTO{
 					Type:        string(event.Type),
 					UserID:      userID,
+					ReplyToken:  event.ReplyToken,
 					MessageID:   message.ID,
-					MessageType: string(message.Type()),
 					MessageText: message.Text,
+					Timestamp:   event.Timestamp,
 				}
+				fmt.Println("!!!!!!!!!!!! ", string(event.Message.Type()))
 				messageDAO.Create(&messageDTO)
 
 				// Reply message

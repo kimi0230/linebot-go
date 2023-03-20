@@ -3,6 +3,7 @@ package messagemodel
 import (
 	"linebot-go/services/mongodb"
 	"testing"
+	"time"
 )
 
 var (
@@ -23,8 +24,10 @@ func TestCreate(t *testing.T) {
 			MessageDTO{
 				Type:        "message",
 				UserID:      "5566",
+				ReplyToken:  "123456789",
 				MessageID:   "message id",
 				MessageText: "Hello World, Kimi",
+				Timestamp:   time.Now(),
 			},
 		},
 	}
