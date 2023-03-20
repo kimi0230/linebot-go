@@ -6,9 +6,13 @@ import (
 	"linebot-go/app/models/usermodel"
 	"linebot-go/services/mongodb"
 	"log"
+	"math"
 	"net/http"
+	"strconv"
 
 	"github.com/gin-gonic/gin"
+	"go.mongodb.org/mongo-driver/bson/primitive"
+	"gopkg.in/mgo.v2/bson"
 )
 
 func GinRequest(c *gin.Context, reqJSON interface{}) (interface{}, error) {
@@ -53,10 +57,35 @@ func GetUsers(c *gin.Context) {
 	}
 	userDAO := usermodel.NewUserDAO(mgClient)
 	skip := (reqJSON.Page - 1) * reqJSON.Limit
-	result, _ := userDAO.GetByQuery(reqJSON.Keyword, int64(reqJSON.Limit), int64(skip), reqJSON.Order, reqJSON.By)
-	// if result == nil {
-	// 	c.AbortWithStatus(http.StatusNoContent)
-	// }
 
+	filter := bson.M{
+		"$or": []bson.M{
+			// "i" 表示忽略大小寫
+			{"displayName": bson.M{"$regex": primitive.Regex{Pattern: reqJSON.Keyword, Options: "i"}}},
+		},
+	}
+
+	result, _ := userDAO.GetByQuery(filter, int64(reqJSON.Limit), int64(skip), reqJSON.Order, reqJSON.By)
+	if len(*result) == 0 {
+		c.AbortWithStatus(http.StatusNoContent)
+	}
+	total, err := userDAO.CountDocuments(filter)
+	if err != nil {
+		c.AbortWithStatus(http.StatusInternalServerError)
+	}
+
+	// https://docs.gitlab.com/ee/api/rest/#other-pagination-headers
+	// x-next-page	The index of the next page.
+	// x-page	The index of the current page (starting at 1).
+	// x-per-page	The number of items per page.
+	// x-prev-page	The index of the previous page.
+	// x-total	The total number of items.
+	// x-total-pages	The total number of pages.
+
+	c.Writer.Header().Set("x-page", strconv.Itoa(reqJSON.Page))
+	c.Writer.Header().Set("x-per-page", strconv.Itoa(reqJSON.Limit))
+	c.Writer.Header().Set("x-total", strconv.Itoa(int(total)))
+	totalPages := math.Ceil(float64(total) / float64(reqJSON.Limit))
+	c.Writer.Header().Set("x-total-pages", strconv.Itoa(int(totalPages)))
 	c.JSON(http.StatusOK, result)
 }

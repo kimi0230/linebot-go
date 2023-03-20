@@ -18,7 +18,7 @@ var (
 
 type PageQueryArgs struct {
 	Keyword string `json:"keyword,omitempty" form:"keyword,omitempty" binding:"-"`
-	Limit   int    `json:"limit,default=10" form:"limit,default=10" binding:"required,number"`
+	Limit   int    `json:"limit,default=100" form:"limit,default=10" binding:"required,number"`
 	Order   string `json:"order,default=desc" form:"order,default=desc" binding:"oneof=desc asc"`
 	By      string `json:"by,default=updated_at" form:"by,default=updated_at" binding:"-"`
 	Page    int    `json:"page,default=1" form:"page,default=1" binding:"number"`
@@ -64,7 +64,7 @@ func (dao *UserDAO) GetByID(id string) (*UserDTO, error) {
 	return &user, nil
 }
 
-func (dao *UserDAO) GetByQuery(keyword string, limit int64, skip int64, order string, by string) (*[]UserDTO, error) {
+func (dao *UserDAO) GetByQuery(filter interface{}, limit int64, skip int64, order string, by string) (*[]UserDTO, error) {
 	var users []UserDTO
 	ctx := context.Background()
 	opts := options.Find().SetSkip(skip).SetLimit(limit)
@@ -75,13 +75,6 @@ func (dao *UserDAO) GetByQuery(keyword string, limit int64, skip int64, order st
 		opts = opts.SetSort(bson.M{by: -1})
 	} else {
 		opts = opts.SetSort(bson.M{by: 1})
-	}
-
-	filter := bson.M{
-		"$or": []bson.M{
-			// "i" 表示忽略大小寫
-			{"displayName": bson.M{"$regex": primitive.Regex{Pattern: keyword, Options: "i"}}},
-		},
 	}
 
 	cur, err := dao.collection.Find(ctx, filter, opts)
@@ -147,4 +140,14 @@ func (dao *UserDAO) Delete(id string) (*mongo.DeleteResult, error) {
 		return nil, err
 	}
 	return result, nil
+}
+
+// https://www.mongodb.com/docs/drivers/go/current/fundamentals/crud/read-operations/count/
+func (dao *UserDAO) CountDocuments(filter interface{}) (int64, error) {
+	ctx := context.Background()
+	count, err := dao.collection.CountDocuments(ctx, filter)
+	if err != nil {
+		return 0, err
+	}
+	return count, nil
 }
