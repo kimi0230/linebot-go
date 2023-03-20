@@ -11,12 +11,9 @@ Use below golang libs:
 ## Ngrok
 Download : https://dashboard.ngrok.com/get-started/setup
 
-Connect your account
-`ngrok config add-authtoken <your auth>`
+Connect your account : `ngrok config add-authtoken <your auth>`
 
-Run
-
-`./ngrok http <port>`
+Run `./ngrok http <port>`
 
 ```sh
 ./ngrok http 8080
@@ -27,10 +24,8 @@ Run
 ```sh
 docker-compose up --build
 
-# 重新執行且放到背景
 docker-compose start
 
-# 停止容器
 docker-compose stop
 ```
 
@@ -53,6 +48,60 @@ air -c air.toml http
 curl 127.0.0.1:8080/ping
 ```
 
+---
+## APIs
+### 1. Get User List
+#### HTTP Request
+`GET {{URL}}/api/v1/users?limit=10&keyword=KK&order=desc&by=updated_at&page=1`
+
+```shell
+curl --location --request GET 'http://127.0.0.1:8080/api/v1/users?limit=10&keyword=KK&order=desc&by=updated_at&page=1''
+```
+
+| Parameter | type   | Description                              | default |
+|-----------|--------|------------------------------------------|---------|
+| limit     | int    | (optional) The number of items per page  | 100     |
+| page      | int    | (optional) The index of the current page | 1       |
+| order     | string | (optional) desc / asc                    | desc    |
+| by        | string | (optional) order field                   | id      |
+| keyword   | string | (optional) search displayName            |         |
+
+#### HTTP Response
+
+```json
+[
+    {
+        "ID": "6417e6870fbeeaf39048053f",
+        "UserID": "xxxxx",
+        "DisplayName": "KK",
+        "PictureURL": "1",
+        "StatusMessage": "status message",
+        "Language": "en",
+        "CreatedAt": "2023-03-17T04:52:23.901Z",
+        "UpdatedAt": "2023-03-17T04:52:23.901Z"
+    }
+    ...
+]
+```
+
+| Parameter     | type | Description                   |
+|---------------|------|-------------------------------|
+| ID            |      |                               |
+| UserID        |      | user id from LINE             |
+| DisplayName   |      | user name from LINE           |
+| PictureURL    |      | user picture from LINE        |
+| StatusMessage |      | user status message from LINE |
+| Language      |      | user language from LINE       |
+
+#### HTTP Response Headers
+| Header        | Description                   |
+|---------------|-------------------------------|
+| X-Page        | The index of the current page |
+| X-Per-Page    | The number of items per page  |
+| x-total       | The total number of items     |
+| x-total-pages | The total number of pages     |
+
+---
 ## Line Webhook settings
 ```sh
 # <ngrok url>/api/v1/callback
