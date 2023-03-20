@@ -50,14 +50,6 @@ func GetUsers(c *gin.Context) {
 		c.AbortWithStatus(http.StatusInternalServerError)
 	}
 
-	// https://docs.gitlab.com/ee/api/rest/#other-pagination-headers
-	// x-next-page	The index of the next page.
-	// x-page	The index of the current page (starting at 1).
-	// x-per-page	The number of items per page.
-	// x-prev-page	The index of the previous page.
-	// x-total	The total number of items.
-	// x-total-pages	The total number of pages.
-
 	c.Writer.Header().Set("x-page", strconv.Itoa(reqJSON.Page))
 	c.Writer.Header().Set("x-per-page", strconv.Itoa(reqJSON.Limit))
 	c.Writer.Header().Set("x-total", strconv.Itoa(int(total)))
