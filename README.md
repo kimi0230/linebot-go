@@ -103,15 +103,15 @@ curl --location --request GET 'http://127.0.0.1:8080/api/v1/users?limit=10&keywo
 
 ### 2. Get Message List
 #### HTTP Request
-`GET {{URL}}/api/v1/messages?limit=10&order=desc&by=updated_at&page=1&user_id=5566`
+`GET {{URL}}/api/v1/messages?limit=10&order=desc&by=updated_at&page=1&userId=5566`
 
 ```shell
-curl --location --request GET 'http://127.0.0.1:8080/api/v1/messages?limit=10&order=desc&by=updated_at&page=1&user_id=5566'
+curl --location --request GET 'http://127.0.0.1:8080/api/v1/messages?limit=10&order=desc&by=updated_at&page=1&userId=5566'
 ```
 
 | Parameter | type   | Description                              | default |
 |-----------|--------|------------------------------------------|---------|
-| user_id   | string | (optional) LINE User id                  |         |
+| userId    | string | (optional) LINE User id                  |         |
 | limit     | int    | (optional) The number of items per page  | 100     |
 | page      | int    | (optional) The index of the current page | 1       |
 | order     | string | (optional) desc / asc                    | desc    |
@@ -156,11 +156,35 @@ curl --location --request GET 'http://127.0.0.1:8080/api/v1/messages?limit=10&or
 | x-total       | The total number of items     |
 | x-total-pages | The total number of pages     |
 
+
+### 3. LINE Push Message
+#### HTTP Request
+`POST {{URL}}/api/v1/line/message/push`
+
+```shell
+curl --location --request POST 'http://127.0.0.1:8080/api/v1/line/message/push' \
+--form 'userId="user id"' \
+--form 'message="Hello"'
+```
+
+| Parameter | type   | Description                     | default |
+|-----------|--------|---------------------------------|---------|
+| userId    | string | (required) LINE User id         |         |
+| message   | string | (required) Message want to sent |         |
+
+#### HTTP Response
+
+```json
+{
+    "message": "ok"
+}
+```
+
 ---
 ## Line Webhook settings
 ```sh
 # <ngrok url>/api/v1/callback
-https://835d-61-228-16-110.jp.ngrok.io/api/v1/callback
+https://835d-61-228-16-110.jp.ngrok.io/api/v1/line/callback
 ```
 
 ## Connect Mongodb

@@ -1,9 +1,10 @@
-package linecallback
+package lineapi
 
 import (
 	"fmt"
 	"linebot-go/app/models/messagemodel"
 	"linebot-go/app/models/usermodel"
+	"linebot-go/services/ginservices"
 	"linebot-go/services/linesdk"
 	"linebot-go/services/mongodb"
 	"log"
@@ -17,7 +18,8 @@ import (
 func Callback(c *gin.Context) {
 	bot, err := linesdk.NewLineBot(viper.GetString("line.channel_secret"), viper.GetString("line.accsss_token"))
 	if err != nil {
-		log.Fatal(err)
+		log.Println(err)
+		c.AbortWithStatus(http.StatusInternalServerError)
 	}
 
 	events, err := bot.Client.ParseRequest(c.Request)
@@ -83,7 +85,7 @@ func Callback(c *gin.Context) {
 					MessageText: message.Text,
 					Timestamp:   event.Timestamp,
 				}
-				fmt.Println("!!!!!!!!!!!! ", string(event.Message.Type()))
+
 				messageDAO.Create(&messageDTO)
 
 				// Reply message
@@ -94,6 +96,30 @@ func Callback(c *gin.Context) {
 			}
 		}
 	}
+	c.JSON(http.StatusOK, gin.H{
+		"message": "ok",
+	})
+}
+
+func PushMessage(c *gin.Context) {
+	type structRequest struct {
+		UserID  string `json:"userId,omitempty" form:"userId,omitempty" binding:"required"`
+		Message string `json:"message,omitempty" form:"message,omitempty" binding:"required"`
+	}
+
+	var reqJSON structRequest
+	_, err := ginservices.GinRequest(c, &reqJSON)
+	if err != nil {
+		c.AbortWithStatus(http.StatusBadRequest)
+		return
+	}
+	bot, err := linesdk.NewLineBot(viper.GetString("line.channel_secret"), viper.GetString("line.accsss_token"))
+	if err != nil {
+		c.AbortWithStatus(http.StatusInternalServerError)
+	}
+
+	bot.PushMessage(reqJSON.UserID, reqJSON.Message)
+
 	c.JSON(http.StatusOK, gin.H{
 		"message": "ok",
 	})

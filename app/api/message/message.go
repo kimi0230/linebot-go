@@ -16,7 +16,7 @@ import (
 
 func GetMessages(c *gin.Context) {
 	type structRequest struct {
-		UserID string `json:"user_id,omitempty" form:"user_id,omitempty" binding:"-"`
+		UserID string `json:"userId,omitempty" form:"userId,omitempty" binding:"-"`
 		messagemodel.PageQueryArgs
 	}
 	var reqJSON structRequest

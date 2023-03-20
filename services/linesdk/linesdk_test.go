@@ -16,11 +16,11 @@ func init() {
 	var err error
 	bot, err = NewLineBot(CHANNEL_SECRET, ACCESS_TOKEN)
 	if err != nil {
-		log.Fatal(err)
+		log.Println(err)
 	}
 }
 
-func TestCreate(t *testing.T) {
+func TestPushMessage(t *testing.T) {
 	var tests = []struct {
 		userId  string
 		message string
