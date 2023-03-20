@@ -35,12 +35,12 @@ docker-compose stop
 # go run main.go --config <your config> http --port <your port>
 go run main.go --config config.toml http --port 8080
 
-# air -c  <your air config> --port <your port>
-# will run local.toml
-air -c air.toml http
+# Executed file
+./build/linebot-go.mac.x64 --config config.toml http --port 8080
 
-# build/
-./build/linebot-go.mac.x64 --config local.toml http --port 8080
+# air -c  <your air config> --port <your port>
+# Note!!! run local.toml not config.toml
+air -c air.toml http
 ```
 
 ### Test Http Server
