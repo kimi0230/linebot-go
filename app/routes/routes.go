@@ -3,6 +3,7 @@ package routes
 import (
 	"linebot-go/app/api/heartbeat"
 	"linebot-go/app/api/linecallback"
+	"linebot-go/app/api/user"
 
 	"github.com/gin-gonic/gin"
 )
@@ -16,16 +17,12 @@ func RegisterRoutes(router *gin.Engine) {
 
 		v1.POST("/callback", linecallback.Callback)
 
-		admin := v1.Group("/admin")
-		{
-			admin.GET("/messages", func(c *gin.Context) {
-				//...
-			})
+		v1.GET("/users", user.GetUsers)
 
-			admin.POST("/users", func(c *gin.Context) {
-				//...
-			})
-		}
+		v1.GET("/messages", func(c *gin.Context) {
+			//...
+		})
+
 	}
 
 }

@@ -2,6 +2,7 @@ package usermodel
 
 import (
 	"context"
+	"strings"
 	"time"
 
 	"github.com/spf13/viper"
@@ -14,6 +15,14 @@ import (
 var (
 	COLLECTION_NAME = "users"
 )
+
+type PageQueryArgs struct {
+	Keyword string `json:"keyword,omitempty" form:"keyword,omitempty" binding:"-"`
+	Limit   int    `json:"limit,default=10" form:"limit,default=10" binding:"required,number"`
+	Order   string `json:"order,default=desc" form:"order,default=desc" binding:"oneof=desc asc"`
+	By      string `json:"by,default=updated_at" form:"by,default=updated_at" binding:"-"`
+	Page    int    `json:"page,default=1" form:"page,default=1" binding:"number"`
+}
 
 type UserDAO struct {
 	collection *mongo.Collection
@@ -53,6 +62,39 @@ func (dao *UserDAO) GetByID(id string) (*UserDTO, error) {
 		return nil, err
 	}
 	return &user, nil
+}
+
+func (dao *UserDAO) GetByQuery(keyword string, limit int64, skip int64, order string, by string) (*[]UserDTO, error) {
+	var users []UserDTO
+	ctx := context.Background()
+	opts := options.Find().SetSkip(skip).SetLimit(limit)
+	// Handle Order
+	// https://www.mongodb.com/docs/drivers/go/current/fundamentals/crud/read-operations/sort/
+	order = strings.ToLower(order)
+	if order == "desc" {
+		opts = opts.SetSort(bson.M{by: -1})
+	} else {
+		opts = opts.SetSort(bson.M{by: 1})
+	}
+
+	filter := bson.M{
+		"$or": []bson.M{
+			// "i" 表示忽略大小寫
+			{"displayName": bson.M{"$regex": primitive.Regex{Pattern: keyword, Options: "i"}}},
+		},
+	}
+
+	cur, err := dao.collection.Find(ctx, filter, opts)
+	if err != nil {
+		return nil, err
+	}
+	defer cur.Close(ctx)
+
+	if err = cur.All(ctx, &users); err != nil {
+		panic(err)
+	}
+
+	return &users, nil
 }
 
 func (dao *UserDAO) Update(user *UserDTO) (*mongo.UpdateResult, error) {
