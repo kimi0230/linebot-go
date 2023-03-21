@@ -33,5 +33,12 @@ func (lb *LineBot) GetProfile(userID string) (*linebot.UserProfileResponse, erro
 		return nil, err
 	}
 	return profile, nil
+}
 
+func (lb *LineBot) PushMessage(userID, message string) (*linebot.BasicResponse, error) {
+	response, err := lb.Client.PushMessage(userID, linebot.NewTextMessage(message)).Do()
+	if err != nil {
+		return nil, err
+	}
+	return response, nil
 }

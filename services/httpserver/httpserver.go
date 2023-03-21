@@ -11,6 +11,7 @@ import (
 )
 
 func StartGinServer(port int) {
+	StartBind()
 	r := gin.Default()
 	r.UseH2C = true
 

@@ -7,5 +7,15 @@
     write_timeout = "30s"
 
 [line]
-    channel_secret = "channel secret"
-    accsss_token = "channel access token"
+    channel_secret = ""
+    accsss_token = ""
+
+[mongo]
+    ip="127.0.0.1"
+    port="27017"
+    # username="root"
+    # password="root"
+    username="user"
+    password="user_password"
+    poolsize="10"
+    database="linebot-go"
