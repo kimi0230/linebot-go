@@ -8,45 +8,43 @@ Use below golang libs:
 * cobra: command line tools https://github.com/spf13/cobra
 * Go line sdk : https://github.com/line/line-bot-sdk-go
 
-## Ngrok
-Download : https://dashboard.ngrok.com/get-started/setup
+## Demo
 
-Connect your account : `ngrok config add-authtoken <your auth>`
+First, you should setup necessary config of LINE, MongoDB, etc in `config.toml` and `local.toml`.
+If you wan't your config push to repository, copy `local.example.toml` to `local.toml`.
 
-Run `./ngrok http <port>`
+[API Doc Links](#apis)
 
+### 1. Start Service
+#### If Run `go run main.go`
+`config=<your config file name. ex:config.toml or local.toml>`
+
+example:
 ```sh
-./ngrok http 8080
+make run-local config=config.toml
 ```
 
-## Run locally
-### Docker
+#### If Run bin file
+`config=<your config file name. ex:config.toml or local.toml>`
+
+example:
 ```sh
-docker-compose up --build
-
-docker-compose start
-
-docker-compose stop
+make clean
+make build
+make run config=config.toml
 ```
 
-### Command
+### 2. Set Line Webhook
+
+1. Go to [LINE Developers Console](https://developers.line.biz/en/)
+2. Add ngrok url to `Webhook URL`
+
 ```sh
-# command 
-# go run main.go --config <your config> http --port <your port>
-go run main.go --config config.toml http --port 8080
-
-# Executed file
-./build/linebot-go.mac.x64 --config config.toml http --port 8080
-
-# air -c  <your air config> --port <your port>
-# Note!!! run local.toml not config.toml
-air -c air.toml http
+# <ngrok url>/api/v1/line/callback
+https://835d-61-228-16-110.jp.ngrok.io/api/v1/line/callback
 ```
 
-### Test Http Server
-```sh
-curl 127.0.0.1:8080/ping
-```
+![](assets/images/LINE-Webhook-URL.png)
 
 ---
 ## APIs
@@ -153,8 +151,8 @@ curl --location --request GET 'http://127.0.0.1:8080/api/v1/messages?limit=10&or
 |---------------|-------------------------------|
 | X-Page        | The index of the current page |
 | X-Per-Page    | The number of items per page  |
-| x-total       | The total number of items     |
-| x-total-pages | The total number of pages     |
+| X-total       | The total number of items     |
+| X-total-pages | The total number of pages     |
 
 
 ### 3. LINE Push Message
@@ -181,18 +179,56 @@ curl --location --request POST 'http://127.0.0.1:8080/api/v1/line/message/push' 
 ```
 
 ---
-## Line Webhook settings
+## Ngrok
+Download : https://dashboard.ngrok.com/get-started/setup
+
+Connect your account : `ngrok config add-authtoken <your auth>`
+
+Run `./ngrok http <port>`
+
 ```sh
-# <ngrok url>/api/v1/callback
-https://835d-61-228-16-110.jp.ngrok.io/api/v1/line/callback
+./ngrok http 8080
 ```
 
-## Connect Mongodb
+## Run locally
+### Using Docker
+```sh
+docker-compose up --build
+
+docker-compose start
+
+docker-compose stop
+```
+
+### Using Command
+```sh
+# command 
+# go run main.go --config <your config> http --port <your port>
+go run main.go --config config.toml http --port 8080
+
+# Executed file
+./build/linebot-go.mac.x64 --config config.toml http --port 8080
+
+# air -c  <your air config> --port <your port>
+# Note!!! run default file local.toml
+air -c air.toml http
+```
+
+### Test Http Server
+
+```sh
+curl 127.0.0.1:8080/ping
+```
+
+---
+##  Mongodb Configuration
 * Root Username = root
 * Root Password = root
 * User Username = user
 * User Password = user_password
 * Database = linebot-go
+* IP = 127.0.0.1
+* Port = 27017
 
 # Reference
 * [developers.line.biz](https://developers.line.biz/en/docs/)
