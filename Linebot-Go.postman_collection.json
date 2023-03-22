@@ -1,0 +1,190 @@
+{
+	"info": {
+		"_postman_id": "877c60a1-046d-4d1f-b672-4b8588c53b7b",
+		"name": "Linebot-Go",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "5262545"
+	},
+	"item": [
+		{
+			"name": "GetUsers",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "k",
+							"value": "7788",
+							"type": "text",
+							"disabled": true
+						}
+					]
+				},
+				"url": {
+					"raw": "{{URL}}/api/v1/users?limit=3&order=desc&by=updated_at&page=1",
+					"host": [
+						"{{URL}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"users"
+					],
+					"query": [
+						{
+							"key": "limit",
+							"value": "3"
+						},
+						{
+							"key": "keyword",
+							"value": "KK",
+							"disabled": true
+						},
+						{
+							"key": "order",
+							"value": "desc"
+						},
+						{
+							"key": "by",
+							"value": "updated_at"
+						},
+						{
+							"key": "page",
+							"value": "1"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GetMessages",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "k",
+							"value": "7788",
+							"type": "text",
+							"disabled": true
+						}
+					]
+				},
+				"url": {
+					"raw": "{{URL}}/api/v1/messages?limit=10&order=desc&by=updated_at&page=1",
+					"host": [
+						"{{URL}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"messages"
+					],
+					"query": [
+						{
+							"key": "limit",
+							"value": "10"
+						},
+						{
+							"key": "keyword",
+							"value": "Hello World",
+							"disabled": true
+						},
+						{
+							"key": "order",
+							"value": "desc"
+						},
+						{
+							"key": "by",
+							"value": "updated_at"
+						},
+						{
+							"key": "page",
+							"value": "1"
+						},
+						{
+							"key": "userId",
+							"value": "5566",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Line PushMessage",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "userId",
+							"value": "U14130a731a95a805cafb1d13e2e57dc3",
+							"type": "text"
+						},
+						{
+							"key": "message",
+							"value": "Hi kimi",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{URL}}/api/v1/line/message/push",
+					"host": [
+						"{{URL}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"line",
+						"message",
+						"push"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "URL",
+			"value": "http://127.0.0.1:8080",
+			"type": "string"
+		}
+	]
+}
