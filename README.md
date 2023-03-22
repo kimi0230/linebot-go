@@ -13,6 +13,10 @@ Use below golang libs:
 First, you should setup necessary config of LINE, MongoDB, etc in `config.toml` and `local.toml`.
 If you wan't your config push to repository, copy `local.example.toml` to `local.toml`.
 
+Demo video : https://drive.google.com/file/d/1n-X69TeXttbGPlGDNUXyw995H1zELPsn/view?usp=sharing
+
+[![demo.mp4](assets/images/demo.png)](https://drive.google.com/file/d/1n-X69TeXttbGPlGDNUXyw995H1zELPsn/preview)
+
 [API Doc Links](#apis)
 
 ### 1. Start Service
@@ -47,7 +51,19 @@ https://835d-61-228-16-110.jp.ngrok.io/api/v1/line/callback
 ![](assets/images/LINE-Webhook-URL.png)
 
 ---
+##  Mongodb Configuration
+* Root Username = root
+* Root Password = root
+* User Username = user
+* User Password = user_password
+* Database = linebot-go
+* IP = 127.0.0.1
+* Port = 27017
+
 ## APIs
+
+Postman file : `linebot-go/Linebot-Go.postman_collection.json`
+
 ### 1. Get User List
 #### HTTP Request
 `GET {{URL}}/api/v1/users?limit=10&keyword=KK&order=desc&by=updated_at&page=1`
@@ -221,14 +237,6 @@ curl 127.0.0.1:8080/ping
 ```
 
 ---
-##  Mongodb Configuration
-* Root Username = root
-* Root Password = root
-* User Username = user
-* User Password = user_password
-* Database = linebot-go
-* IP = 127.0.0.1
-* Port = 27017
 
 # Reference
 * [developers.line.biz](https://developers.line.biz/en/docs/)
