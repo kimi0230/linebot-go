@@ -10,8 +10,11 @@ import (
 )
 
 var (
-	cfgFile string
-	port    int
+	cfgFile    string
+	goversion  string
+	buildstamp string
+	githash    string
+	port       int
 )
 
 var rootCmd = &cobra.Command{
@@ -33,11 +36,23 @@ var serverCmd = &cobra.Command{
 	},
 }
 
+var versionCmd = &cobra.Command{
+	Use:   "version",
+	Short: "show version",
+	Long:  `show version`,
+	Run: func(cmd *cobra.Command, args []string) {
+		fmt.Printf("Git Commit Hash: %s\n", githash)
+		fmt.Printf("UTC Build Time : %s\n", buildstamp)
+		fmt.Printf("Golang Version : %s\n", goversion)
+	},
+}
+
 func init() {
 	cobra.OnInitialize(initConfig)
 	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "config.toml", "config file (default is $PWD/config.toml)")
 	serverCmd.Flags().IntVar(&port, "port", 8080, "default is 8080")
 	rootCmd.AddCommand(serverCmd)
+	rootCmd.AddCommand(versionCmd)
 }
 
 func initConfig() {

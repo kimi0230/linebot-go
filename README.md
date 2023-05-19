@@ -262,6 +262,13 @@ go-licenses csv . > sbom.csv
 ```
 這將將 SBOM 寫入 sbom.csv 檔案中，其中包含每個套件的名稱、版本和授權條款。
 
+
+## -ldflags
+
+```sh
+go build -ldflags  "-X main.version=0.1.0  -X 'linebot-go/cmd.goversion=$(go version)' -X linebot-go/cmd.buildstamp=`date -u '+%Y-%m-%d_%I:%M:%S%p'` -X linebot-go/cmd.githash=`git describe --always --long --dirty --abbrev=14`" -x -o build-version main.go
+```
+
 ---
 
 # Reference
