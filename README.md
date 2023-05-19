@@ -236,6 +236,32 @@ air -c air.toml http
 curl 127.0.0.1:8080/ping
 ```
 
+
+## SBOM
+SBOM (Software Bill of Materials) generation 是指生成軟體成分清單的過程。軟體成分清單是一份清單，其中包含了軟體項目所使用的所有元件、依賴庫和其他第三方軟體的詳細資訊。這些資訊可以包括軟體元件的版本、許可證、來源、漏洞等。SBOM 的生成通常是透過自動化工具或流程，從軟體項目的原始碼、依賴管理系統或軟體註冊表中提取相關資訊。生成 SBOM 可以幫助組織更好地管理和監控軟體供應鏈安全性，以及應對潛在的風險和漏洞。
+
+在 Golang 中，您可以使用一些工具來生成軟體供應鏈資訊 (Software Bill of Materials, SBOM)。SBOM 是一份清單，列出了應用程式所使用的開源元件及其相關資訊，包括版本號、授權條款等。以下是一些常用的 Golang 工具和方法：
+
+1. Go Modules: 如果您使用 Go Modules 來管理依賴關係，您可以使用 go mod 指令來生成相關資訊。執行以下指令：
+
+```sh
+go mod vendor
+```
+
+這將生成一個 vendor 目錄，其中包含應用程式所使用的所有相依套件。然後，您可以掃描 vendor 目錄並擷取相關資訊以生成 SBOM。
+
+Go Package License: go-license 是一個用於解析 Golang 專案中套件授權條款的工具。您可以使用以下指令安裝：
+
+```sh
+go install github.com/google/go-licenses@latest
+```
+然後，您可以運行以下命令來生成 SBOM：
+
+```sh
+go-licenses csv . > sbom.csv
+```
+這將將 SBOM 寫入 sbom.csv 檔案中，其中包含每個套件的名稱、版本和授權條款。
+
 ---
 
 # Reference
